@@ -25,5 +25,5 @@ doc/
 .idea
 .secret
 
-# Twitter Credentials
-twitter_credentials.rb
+# Hide any files that have API credentials
+credentials*.*
