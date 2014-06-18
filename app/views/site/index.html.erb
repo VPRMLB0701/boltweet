@@ -3,11 +3,20 @@
 <h3>What is Boltweet?</h3>
 <p>Get to the top of Boltweet by getting the most retweets</p>
 
+<div id="update"></div>
 
+<%= content_for :javascript do %>
+<% # Continuously check /site_stream for updates and replace content of 'update' div with content %>
+<script type="text/javascript">
+  var source = new EventSource('/site_stream');
+  var updatediv = document.getElementById("update");
 
+  source.addEventListener('refresh', function(e){
+    updatediv.innerHTML = $.parseJSON(e.data).output;
+  });
 
-<%=
-$client.search("#boltweet").each do |tweet|
-	tweet.inspect
-end
-%>
+  source.addEventListener('finished', function(e){
+    source.close();
+  });
+</script>
+<% end %>

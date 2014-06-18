@@ -3,8 +3,17 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.4'
 
+# Use puma web server to stream content to end user
+gem 'puma'
+
 # Use Twitter as the API for accessing hashtag
 gem 'twitter'
+
+# Use tweetstream to access the twitter API stream
+gem 'tweetstream'
+
+# Run a script as a daemon in the background
+gem 'daemons-rails'
 
 
 # Use sqlite3 as the database for Active Record

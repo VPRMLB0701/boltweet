@@ -1,6 +1,11 @@
 Boltweet::Application.routes.draw do
 
   root "site#index"
+
+  # Index page will access this site_stream page to get streamed content
+  get 'site_stream' => 'site#index_stream'
+  get 'daemon_test' => 'site#daemon_test'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
