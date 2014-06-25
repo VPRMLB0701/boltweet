@@ -15,6 +15,9 @@ gem 'tweetstream'
 # Run a script as a daemon in the background
 gem 'daemons-rails'
 
+# We use Redis to store content for users (quicker than databse)
+gem 'redis'
+gem 'redis-namespace'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'

@@ -24,8 +24,15 @@ while($running) do
   stream = TweetStream::Client.new
 
   stream.track('#boltweet') do |status|
-    @tweet = Tweet.new(:tweet_id => "#{status.user.id}", :text => "#{status.text}")
+    @tweet = Tweet.new(
+      :tweet_id => "#{status.user.id}", 
+      :tweet_content => "#{status.text}", 
+      :tweet_created_at => "#{status.created_at}"
+    )
     @tweet.save
+
+    $redis.set("last_time", "#{status.created_at}")
+
     sleep 3
   end
 
