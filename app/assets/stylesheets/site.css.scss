@@ -14,9 +14,73 @@ body {
 	margin:0 auto;
 	padding:10px;
 	background-color:rgba(255,255,255,.2);
+	overflow: hidden;
 }
 
 h1 {
 	margin-top:0;
 	text-align:center;
+}
+
+.current_winner_wrap {
+	width:75%;
+	margin:0 auto;
+	padding:20px;
+	background-image: url("http://fc06.deviantart.net/fs71/i/2011/338/e/8/gold_sparkle_by_scratzilla-d4i5y51.jpg");
+}
+	.current_winner_wrap img {
+		display:block;
+		margin:0 auto;
+		max-width:125px;
+	}
+	.current_winner_wrap p {
+		text-align:center;
+		background:#fff;
+		color:#000;
+		padding:10px;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+tr {
+	word-break:break-all;
+}
+
+td.col_tweet_id {
+	width: 10%;
+	text-align: center;
+}
+td.col_tweet_content {
+	width: 70%;
+}
+	td.col_tweet_content img {
+		max-width:125px;
+	}
+
+td.col_tweet_created_at {
+	width: 30%;
 }

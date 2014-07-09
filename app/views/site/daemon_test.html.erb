@@ -1,29 +1,23 @@
-Hi!
 
 <%=
-
 #@user.inspect
 @exist
-
 %>
 
+Most recent tweet in Redis: <%= $redis.get("last_time") %>
+<br>
+Number of tweets in Database: <%= @tweets.count %>
 
-<%= $redis.get("last_time") %>
+<br><br><br>
 
-<table>
+<div class="current_winner_wrap">
 
-<% @tweets.each do |tweet| %>
-<tr>
-  <td><%= tweet.tweet_id %></td>
-  <td><%= tweet.tweet_content %></td>
-  <td><%= tweet.tweet_created_at %></td>
-</tr>
-<% end %>
+  <% $redis.lrange('winners', 0, 4).each do |winner| 
+      current_tweet = $redis.hmget(winner, "tweet_user_image","tweet_content")%>
+      <img src="<%= current_tweet[0].sub(/_normal\./, '.') %>">
+      <p>
+      <%= current_tweet[1] %>
+      </p>
+  <% end %>
 
-</table>
-
-
-
-
-
-
+</div>

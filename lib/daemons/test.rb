@@ -23,21 +23,37 @@ while($running) do
   
   stream = TweetStream::Client.new
 
-  stream.track('#boltweet') do |status|
+  # Reset some redis keys when starting the daemon
+  $redis.set("last_time", Time.now - 666.minutes) # Set the time to something
+  $redis.del('winners') # Delete all winners in Redis
+
+
+  #stream.track('#boltweet') do |status|
+  stream.sample do |status|
+
+    boltweet_uniq_id = SecureRandom.hex(4) # Our unique identifier for each tweet
+
+    # Write to the sql database
     @tweet = Tweet.new(
+      :boltweet_uniq_id => boltweet_uniq_id,
       :tweet_id => "#{status.user.id}", 
+      :tweet_user_profile_image_url => "#{status.user.profile_image_url}", 
       :tweet_content => "#{status.text}", 
       :tweet_created_at => "#{status.created_at}"
     )
     @tweet.save
 
-    $redis.set("last_time", "#{status.created_at}")
+    # Write to redis
+    if $redis.get("last_time") <= Time.now - 1.minutes
+      $redis.set("last_time", "#{status.created_at}")
+      $redis.hmset(boltweet_uniq_id, 
+                  'tweet_user_name', "#{status.user.name}",
+                  'tweet_user_image', "#{status.user.profile_image_url}", 
+                  'tweet_content', "#{status.text}",
+                  'last_time', "#{status.created_at}")
+      $redis.lpush('winners', boltweet_uniq_id)
+    end
 
-    sleep 3
   end
-
-
-  
-  
 
 end
