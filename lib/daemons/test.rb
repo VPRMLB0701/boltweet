@@ -24,9 +24,9 @@ while($running) do
   stream = TweetStream::Client.new
 
   # Reset some redis keys when starting the daemon
+  $redis.flushall # Clear redis completely
   $redis.set("last_time", Time.now - 666.minutes) # Set the time to something
-  $redis.del('winners') # Delete all winners in Redis
-
+  #$redis.del('winners') # Delete all winners in Redis
 
   #stream.track('#boltweet') do |status|
   stream.sample do |status|
@@ -52,6 +52,12 @@ while($running) do
                   'tweet_content', "#{status.text}",
                   'last_time', "#{status.created_at}")
       $redis.lpush('winners', boltweet_uniq_id)
+
+      # Check if there are more than 5 winners in redis
+      if $redis.llen('winners') > 5
+        $redis.rpop('winners') # Remove oldest winner in redis
+      end
+
     end
 
   end
