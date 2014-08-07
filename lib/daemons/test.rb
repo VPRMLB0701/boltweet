@@ -44,7 +44,9 @@ while($running) do
     @tweet.save
 
     # Write to redis
-    if $redis.get("last_time") <= Time.now - 1.minutes
+    # We write the key and it's values to redis. Then we add the key's value to
+    # the winners list in redis.
+    if $redis.get("last_time") <= Time.now - 10.seconds
       $redis.set("last_time", "#{status.created_at}")
       $redis.hmset(boltweet_uniq_id, 
                   'tweet_user_name', "#{status.user.name}",
@@ -55,7 +57,8 @@ while($running) do
 
       # Check if there are more than 5 winners in redis
       if $redis.llen('winners') > 5
-        $redis.rpop('winners') # Remove oldest winner in redis
+        $key_to_remove = $redis.rpop('winners') # Remove oldest winner in redis
+        $redis.del($key_to_remove) # Remove the key that winners referenced also
       end
 
     end
